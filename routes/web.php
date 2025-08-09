@@ -51,6 +51,7 @@ Route::resource('visual', Cvisual::class);
 Route::resource('update', Cactualizar::class);
 
 Route::get('/close', [Clogin::class, 'cerrarSesion']);
+Route::get('/close2', [Clogin::class, 'cerrarSesion']);
 Route::post('/buscarvehiculo', [Cprincipal::class, 'getVehiculo']);
 Route::post('/getActualizacion', [Cactualizar::class, 'getActualizacion']);
 Route::post('/getevento', [Cprincipal::class, 'eventosindra']);
