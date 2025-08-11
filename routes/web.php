@@ -18,6 +18,7 @@ use App\Http\Controllers\Cfrenomotos;
 use App\Http\Controllers\Cfrenomotocarro;
 use App\Http\Controllers\Cvisual;
 use App\Http\Controllers\Cactualizar;
+use App\Http\Controllers\Calibracion;
 use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
@@ -49,15 +50,19 @@ Route::resource('cpr', Cprincipal::class);
 Route::resource('frmotocarro', Cfrenomotocarro::class);
 Route::resource('visual', Cvisual::class);
 Route::resource('update', Cactualizar::class);
+Route::resource('cal', Calibracion::class);
 
 Route::get('/close', [Clogin::class, 'cerrarSesion']);
-Route::get('/close2', [Clogin::class, 'cerrarSesion']);
 Route::post('/buscarvehiculo', [Cprincipal::class, 'getVehiculo']);
+Route::post('/getMaquina', [Cprincipal::class, 'getMaquina']);
 Route::post('/getActualizacion', [Cactualizar::class, 'getActualizacion']);
+Route::post('/getCalibracion', [Calibracion::class, 'getCalibracion']);
+
 Route::post('/getevento', [Cprincipal::class, 'eventosindra']);
 Route::get('/getmac', [Clogin::class, 'getMac']);
 Route::get('/getSession', [Clogin::class, 'getSession']);
 Route::post('/getDefectos', [Cvisual::class, 'getDefectos']);
+Route::post('/updateObservacion', [Cvisual::class, 'updateObservacion']);
 Route::post('/deleteDefectos', [Cvisual::class, 'deleteDefectos']);
 Route::post('/saveDefectos', [Cvisual::class, 'saveDefectos']);
 Route::post('/saveLabrado', [Cvisual::class, 'saveLabrado']);
