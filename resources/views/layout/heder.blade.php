@@ -105,17 +105,46 @@
                                     <i class="bi bi-fuel-pump-diesel-fill"></i><span>Gases Motos</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{url('/op') }}" id="opac">
+                                    <i class="bi bi-fuel-pump-diesel-fill"></i><span>Opacidad</span>
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link collapsed" data-bs-target="#components-nav2" data-bs-toggle="collapse" href="#" aria-expanded="false">
+                            <i class="bi bi-lightbulb-fill"></i><span>Luces</span><i class="bi bi-chevron-down ms-auto"></i>
+                        </a>
+                        <ul id="components-nav2" class="nav-content collapse" data-bs-parent="#sidebar-nav" style="">
+                            <li>                                
+                                <a href="{{url('/lu') }}" id="lux">
+                                    <i class="bi bi-lightbulb-fill"></i><span>Luces Mixta</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{url('/lum') }}" id="luxm">
+                                    <i class="bi bi-lightbulb-fill"></i><span>Luces Motos</span>
+                                </a>
+                            </li>
+                           
                             
                         </ul>
                     </li>
 
                     <li><a href="{{url('/visual') }}" class="nav-link scrollto" id="visual"><i class="bi bi-eye"></i> <span>Visual</span></a></li>
-                    <li><a href="{{url('/op') }}" class="nav-link scrollto" id="opac"><i class="bi bi-fuel-pump-diesel-fill"></i> <span>Opacidad</span></a></li>
-                    <li><a href="{{url('/lu') }}" class="nav-link scrollto" id="lux"><i class="bi bi-lightbulb-fill"></i> <span>Luces Mixta</span></a></li>
-                    <li><a href="{{url('/lum') }}" class="nav-link scrollto" id="luxm"><i class="bi bi-lightbulb-fill"></i> <span>Luces Motos</span></a></li>
+                    {{-- <li><a href="{{url('/op') }}" class="nav-link scrollto" id="opac"><i class="bi bi-fuel-pump-diesel-fill"></i> <span>Opacidad</span></a></li> --}}
+                    {{-- <li><a href="{{url('/lu') }}" class="nav-link scrollto" id="lux"><i class="bi bi-lightbulb-fill"></i> <span>Luces Mixta</span></a></li> --}}
+                    {{-- <li><a href="{{url('/lum') }}" class="nav-link scrollto" id="luxm"><i class="bi bi-lightbulb-fill"></i> <span>Luces Motos</span></a></li> --}}
                     <li><a href="{{url('/so') }}" class="nav-link scrollto" id="son"><i class="bi bi-mic-fill"></i> <span>Sonometro</span></a></li>
-                    <li><a href="{{url('/tax') }}" class="nav-link scrollto" id="son"><i class="bi bi-gear-fill"></i> <span>Taximetro</span></a></li>
-                    <li><a href="{{url('/update') }}" class="nav-link scrollto" id="son"><i class="bi bi-arrow-clockwise"></i> <span>Actualizar aplicación</span></a></li>
+                    <li><a href="{{url('/tax') }}" class="nav-link scrollto" id="tax"><i class="bi bi-gear-fill"></i> <span>Taximetro</span></a></li>
+                    <li><a href="{{url('/update') }}" class="nav-link scrollto" id="actu"><i class="bi bi-arrow-clockwise"></i> <span>Actualizar aplicación</span></a></li>
+                    <li>
+                        <a href="{{url('/cal') }}" class="nav-link scrollto" id="cal">
+                            <i class="bi bi-sliders"></i> <span>Calibracion</span>
+                        </a>
+                    </li></li>
                     <li><a href="{{url('/close') }}" class="nav-link scrollto" id="close"><i class="bi bi-box-arrow-left"></i> <span>Cerrar sesion</span></a></li>
                     <br><br>
                 </ul>

@@ -95,7 +95,7 @@
                             <div class="col-sm-12 col-md-5 col-lg-5" style="align-content: center">
                                 <div class="input-group mb-3" style="align-content: center">
                                     <label class="input-group-text" for="inputGroupSelect01">Maquinas</label>
-                                    <select class="form-select" id="inputGroupSelect01" name="selMaquina"
+                                    <select class="form-select" id="selMaquina" name="selMaquina"
                                         id="selMaquina">
                                         @foreach ($maquinas as $ma)
                                             <option value="{{ $ma->idmaquina }}">{{ $ma->maquina }} </option>
@@ -107,7 +107,7 @@
 
                                 </div>
                             </div>
-                           
+
                         </div>
                         <div class="row">
                             <div class="col-sm-12 col-md-3 col-lg-3" style="align-content: center">
@@ -135,6 +135,17 @@
                                     @if ($errors->has('selCatalizador'))
                                         <span class="error text-danger">{{ $errors->first('selCatalizador') }}</span>
                                     @endif
+
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-lg-3" style="align-content: center">
+                                <div class="input-group mb-3" style="align-content: center">
+                                    <label class="input-group-text" for="inputGroupSelect01">Motocarro</label>
+                                    <select class="form-select" name="selMotocarro" id="selMotocarro">
+                                        <option value="0" selected>NO</option>
+                                        <option value="1">SI</option>
+                                    </select>
+
 
                                 </div>
                             </div>
@@ -256,6 +267,21 @@
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
+    $(document).ready(function() {
+        if (localStorage.getItem('motocarro') == '1') {
+            $('#selMotocarro').val(localStorage.getItem('motocarro'));
+            getMaquina();
+        }
+    });
+     $("#selMotocarro").change(function(e) {
+        e.preventDefault();
+        let motocarro = $('#selMotocarro option:selected').attr('value');
+        localStorage.setItem('motocarro', motocarro);
+        
+            getMaquina();
+        
+    });
+
     $(".selPlaca").change(function(e) {
         e.preventDefault();
         var placa = $('.selPlaca option:selected').attr('value');
@@ -266,6 +292,8 @@
         console.log(placa2);
 
     });
+
+   
     $("#btn-evento").click(function(ev) {
         ev.preventDefault();
         if ($(".Vplaca").val() == null || $(".Vplaca").val() == "") {
@@ -361,4 +389,41 @@
             });
         }
     })
+
+    var getMaquina = function() {
+        $.ajax({
+            url: 'getMaquina/',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                idtipo_prueba: 3,
+                motocarro: $('#selMotocarro').val(),
+                _token: $("input[name='_token']").val()
+            },
+            success: function(data, textStatus, jqXHR) {
+                if (data.length > 0) {
+                    $('#selMaquina').empty();
+                    // $('.selMaquina').append('<option value="">Seleccione una maquina</option>');
+                    $.each(data, function(i, res) {
+                        $('#selMaquina').append('<option value="' + res.idmaquina + '">' + res.maquina +
+                            '</option>');
+                    });
+                } else {
+                    Toast.fire({
+                        icon: "error",
+                        title: "No se encontraron maquinas."
+                    });
+                }
+
+
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('error')
+                console.log(jqXHR.responseText)
+                console.log(textStatus)
+                console.log(errorThrown)
+            }
+        });
+    }
 </script>

@@ -291,6 +291,7 @@
                                                             <th>Código</th>
                                                             <th>Tipo</th>
                                                             <th>Descripción</th>
+                                                            <th>Observaciones</th>
 
                                                             <th>Acciones</th>
                                                         </tr>
@@ -394,61 +395,147 @@
 
     let allDefects = [];
     async function loadDefects() {
-        $.ajax({
-            url: 'getDefectos/',
-            type: 'post',
-            dataType: 'json',
-            data: {
-                idprueba: $("#idprueba").val(),
-                _token: $("input[name='_token']").val()
-            },
-            success: function(data) {
-                initializeSelect2(data.defectos);
-                $("#tableResultsDefectos tbody").empty();
-                if (data.resultados.length == 0) {
+    $.ajax({
+        url: 'getDefectos/',
+        type: 'post',
+        dataType: 'json',
+        data: {
+            idprueba: $("#idprueba").val(),
+            _token: $("input[name='_token']").val()
+        },
+        success: function(data) {
+            initializeSelect2(data.defectos);
+            $("#tableResultsDefectos tbody").empty();
+            if (data.resultados.length == 0) {
+                $("#tableResultsDefectos tbody").append(
+                    `<tr>
+                        <td colspan="6">No se encontraron defectos</td>
+                    </tr>`
+                );
+                Swal.close();
+                return;
+            }
+            
+            data.resultados.forEach(function(index, value) {
+                if (index.tiporesultado == 'defecto') {
+                    // Creamos una celda editable para la observación
+                    const observacionCell = `
+                        <td class="observacion-cell" data-id="${index.idresultados}">
+                            <span class="observacion-text">${index.observacion}</span>
+                            <textarea class="form-control observacion-edit d-none">${index.observacion}</textarea>
+                        </td>`;
+                    
                     $("#tableResultsDefectos tbody").append(
                         `<tr>
-                            <td colspan="5">No se encontraron defectos</td>
+                            <td>${index.valor}</td>
+                            <td>${index.tipo}</td>
+                            <td>${index.descripcion}</td>
+                            ${observacionCell}
+                            <td>
+                                <div class="d-flex flex-column gap-1">
+                                    <button class="btn btn-primary btn-sm btn-edit-observacion" data-id="${index.idresultados}">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-success btn-sm btn-save-observacion d-none" data-id="${index.idresultados}">
+                                        <i class="fas fa-save"></i> Guardar
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="event.preventDefault(); removeDefect(${index.idresultados});">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </td>
                         </tr>`
                     );
-                    Swal.close();
-                    return;
+                } else if (index.observacion == "OBSERVACIONLABRADO") {
+                    $("#" + index.tiporesultado)
+                        .val(index.valor)
+                        .attr('idresultados', index.idresultados);
                 }
-                data.resultados.forEach(function(index, value) {
-                    // console.log(index);
-                    if (index.tiporesultado == 'defecto') {
-                        $("#tableResultsDefectos tbody").append(
-                            `<tr>
-                                <td>${index.valor}</td>
-                                <td>${index.tipo}</td>
-                                <td>${index.descripcion}</td>
-                                
-                                <td>
-                                    <button class="btn btn-danger btn-sm" onclick="event.preventDefault(); removeDefect(${index.idresultados});">Eliminar</button>
-                                </td>
-                            </tr>`
-                        );
-                    } else if (index.observacion == "OBSERVACIONLABRADO") {
-                        // console.log(index.tiporesultado);
-                        $("#" + index.tiporesultado)
-                            .val(index.valor)
-                            .attr('idresultados', index.idresultados);
+            });
+
+            // Agregar eventos para los botones de edición
+            $('.btn-edit-observacion').click(function(ev) {
+                ev.preventDefault();
+                const id = $(this).data('id');
+                const cell = $(`.observacion-cell[data-id="${id}"]`);
+                
+                // Mostrar textarea y ocultar texto
+                cell.find('.observacion-text').addClass('d-none');
+                cell.find('.observacion-edit').removeClass('d-none');
+                
+                // Cambiar botones
+                $(this).addClass('d-none');
+                $(this).siblings('.btn-save-observacion').removeClass('d-none');
+            });
+
+            $('.btn-save-observacion').click(function(ev) {
+                ev.preventDefault();
+                const id = $(this).data('id');
+                console.log(id)
+                const cell = $(`.observacion-cell[data-id="${id}"]`);
+                const nuevaObservacion = cell.find('.observacion-edit').val();
+                
+                // Mostrar carga
+                Swal.fire({
+                    title: 'Guardando...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
                     }
                 });
 
-                // Cerrar SweetAlert de carga
-                Swal.close();
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudieron cargar los defectos. ' + jqXHR.responseText
+                // Enviar la actualización al servidor
+                $.ajax({
+                    url: 'updateObservacion/',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        idresultado: id,
+                        observacion: nuevaObservacion,
+                        _token: $("input[name='_token']").val()
+                    },
+                    success: function(response) {
+                        // Actualizar la vista
+                        cell.find('.observacion-text').text(nuevaObservacion);
+                        
+                        // Volver al estado normal
+                        cell.find('.observacion-text').removeClass('d-none');
+                        cell.find('.observacion-edit').addClass('d-none');
+                        
+                        // Cambiar botones
+                        $(`.btn-edit-observacion[data-id="${id}"]`).removeClass('d-none');
+                        $(`.btn-save-observacion[data-id="${id}"]`).addClass('d-none');
+                        
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Guardado!',
+                            text: 'La observación se ha actualizado correctamente.',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    },
+                    error: function(jqXHR) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo guardar la observación. ' + jqXHR.responseText
+                        });
+                    }
                 });
+            });
 
-            }
-        });
-    }
+            // Cerrar SweetAlert de carga
+            Swal.close();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudieron cargar los defectos. ' + jqXHR.responseText
+            });
+        }
+    });
+}
 
     var saveLabrado = function(data) {
         let idresultados = data.getAttribute('idresultados')
@@ -596,10 +683,12 @@
                     text: 'El defecto se eliminó correctamente. '
                 });
 
-                $("#tableResultsDefectos tbody tr").filter(function() {
-                    return $(this).find('button').attr('onclick')?.includes(
-                        `removeDefect(${idresultados})`);
-                }).remove();
+                $("#tableResultsDefectos tbody tr").each(function() {
+                    var btn = $(this).find('button[onclick^="event.preventDefault(); removeDefect(' + idresultados + ')"]');
+                    if (btn.length > 0) {
+                        $(this).remove();
+                    }
+                });
                 //loadDefects();
 
             },

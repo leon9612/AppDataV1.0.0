@@ -16,17 +16,18 @@
                             <div class="row">
 
 
-                                <div class="col-sm-12 col-md-6 col-lg-6" >
+                                <div class="col-sm-12 col-md-6 col-lg-6">
                                     <div class="input-group mb-3" style="align-content: center;">
-                                        <label class="input-group-text" for="inputGroupSelect01">Seleccione la version</label>
+                                        <label class="input-group-text" for="inputGroupSelect01">Seleccione la
+                                            version</label>
                                         <select class="form-select selVersion" id="inputGroupSelect01"
-                                            style="height: 58px" name="selPlaca">
-                                            <option value="AppDataV1.0.0">AppDataV1.0.0</option>
+                                            style="height: 58px" >
+                                            
 
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-6 col-lg-6" >
+                                <div class="col-sm-12 col-md-6 col-lg-6">
                                     <div style="text-align: center">
                                         <button style="height: 55px; width: 150px" class="btn btn-outline-success"
                                             id="btn-descargar">Descargar</button>
@@ -35,11 +36,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="margin-top: 15px">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12 col-lg-12" id="descipcionActualizacion">
+                                    
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
 
 
 
 
-                       
+
                     </form>
                 </div>
             </div>
@@ -66,16 +76,57 @@
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
-    // $(".selPlaca").change(function(e) {
-    //     e.preventDefault();
-    //     var placa = $('.selPlaca option:selected').attr('value');
-    //     var placa2 = placa.split("-");
-    //     $(".Vplaca").val(placa2[1]);
-    //     $("#placa").val(placa2[1]);
-    //     $("#idprueba").val(placa2[0]);
 
-    // });
-    
+    $(document).ready(function() {
+        $.ajax({
+            url: 'https://appdataingeniersoftware.com/appdatacontrol/index.php/Cdispositivo/getActualizaciones',
+            type: 'get',
+            dataType: 'json',
+            success: function(data, textStatus, jqXHR) {
+                console.log(data)
+                $(".selVersion").empty();
+                $(".selVersion").append($('<option>', {
+                    value: '',
+                    text: 'Seleccione'
+                }));
+                $.each(data, function(index, value) {
+                    $(".selVersion").append($('<option>', {
+                        value: value.file,
+                        text: value.file
+                    }));
+                });
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+
+    });
+    $(".selVersion").change(function(e) {
+        e.preventDefault();
+        $('.selVersion option:selected').attr('value');
+        $.ajax({
+            url: 'https://appdataingeniersoftware.com/appdatacontrol/index.php/Cdispositivo/getActualizacionesFile',
+            type: 'get',
+            dataType: 'json',
+            data:{
+                file: $('.selVersion option:selected').attr('value'),
+            },
+            success: function(data, textStatus, jqXHR) {
+                console.log(data)
+                $("#descipcionActualizacion").empty();
+                $("#descipcionActualizacion").html(data[0].descripcion);
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+
+            }
+        });
+
+
+    });
+
 
     $("#btn-descargar").click(function(ev) {
         ev.preventDefault();
@@ -85,33 +136,31 @@
             allowOutsideClick: false,
             allowEscapeKey: false,
             didOpen: () => {
-            Swal.showLoading();
+                Swal.showLoading();
             }
         });
-            $.ajax({
-                url: 'getActualizacion/',
-                type: 'post',
-                dataType: 'json',
-                data: {
-                    
-                    file: $(".selVersion option:selected").attr('value'),
-                    _token: $("input[name='_token']").val()
-                },
-                success: function(data, textStatus, jqXHR) {
-                    console.log(data)
-                    downloadingAlert.close();
+        $.ajax({
+            url: 'getActualizacion/',
+            type: 'post',
+            dataType: 'json',
+            data: {
 
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log('error')
-                    console.log(jqXHR.responseText)
-                    console.log(textStatus)
-                    console.log(errorThrown)
-                }
-            });
-        
+                file: $(".selVersion option:selected").attr('value'),
+                _token: $("input[name='_token']").val()
+            },
+            success: function(data, textStatus, jqXHR) {
+                console.log(data)
+                downloadingAlert.close();
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('error')
+                console.log(jqXHR.responseText)
+                console.log(textStatus)
+                console.log(errorThrown)
+            }
+        });
+
 
     });
-
-    
 </script>
