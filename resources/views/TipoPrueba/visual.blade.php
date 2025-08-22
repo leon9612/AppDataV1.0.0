@@ -395,38 +395,47 @@
 
     let allDefects = [];
     async function loadDefects() {
-    $.ajax({
-        url: 'getDefectos/',
-        type: 'post',
-        dataType: 'json',
-        data: {
-            idprueba: $("#idprueba").val(),
-            _token: $("input[name='_token']").val()
-        },
-        success: function(data) {
-            initializeSelect2(data.defectos);
-            $("#tableResultsDefectos tbody").empty();
-            if (data.resultados.length == 0) {
-                $("#tableResultsDefectos tbody").append(
-                    `<tr>
+        if ($("#idprueba").val() < 1) {
+            // document.getElementById(data.id).value = '';
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Por favor seleccione una prueba antes de continuar.'
+            });
+            return;
+        }
+        $.ajax({
+            url: 'getDefectos/',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                idprueba: $("#idprueba").val(),
+                _token: $("input[name='_token']").val()
+            },
+            success: function(data) {
+                initializeSelect2(data.defectos);
+                $("#tableResultsDefectos tbody").empty();
+                if (data.resultados.length == 0) {
+                    $("#tableResultsDefectos tbody").append(
+                        `<tr>
                         <td colspan="6">No se encontraron defectos</td>
                     </tr>`
-                );
-                Swal.close();
-                return;
-            }
-            
-            data.resultados.forEach(function(index, value) {
-                if (index.tiporesultado == 'defecto') {
-                    // Creamos una celda editable para la observación
-                    const observacionCell = `
+                    );
+                    Swal.close();
+                    return;
+                }
+
+                data.resultados.forEach(function(index, value) {
+                    if (index.tiporesultado == 'defecto') {
+                        // Creamos una celda editable para la observación
+                        const observacionCell = `
                         <td class="observacion-cell" data-id="${index.idresultados}">
                             <span class="observacion-text">${index.observacion}</span>
                             <textarea class="form-control observacion-edit d-none">${index.observacion}</textarea>
                         </td>`;
-                    
-                    $("#tableResultsDefectos tbody").append(
-                        `<tr>
+
+                        $("#tableResultsDefectos tbody").append(
+                            `<tr>
                             <td>${index.valor}</td>
                             <td>${index.tipo}</td>
                             <td>${index.descripcion}</td>
@@ -445,102 +454,114 @@
                                 </div>
                             </td>
                         </tr>`
-                    );
-                } else if (index.observacion == "OBSERVACIONLABRADO") {
-                    $("#" + index.tiporesultado)
-                        .val(index.valor)
-                        .attr('idresultados', index.idresultados);
-                }
-            });
+                        );
+                    } else if (index.observacion == "OBSERVACIONLABRADO") {
+                        $("#" + index.tiporesultado)
+                            .val(index.valor)
+                            .attr('idresultados', index.idresultados);
+                    }
+                });
 
-            // Agregar eventos para los botones de edición
-            $('.btn-edit-observacion').click(function(ev) {
-                ev.preventDefault();
-                const id = $(this).data('id');
-                const cell = $(`.observacion-cell[data-id="${id}"]`);
-                
-                // Mostrar textarea y ocultar texto
-                cell.find('.observacion-text').addClass('d-none');
-                cell.find('.observacion-edit').removeClass('d-none');
-                
-                // Cambiar botones
-                $(this).addClass('d-none');
-                $(this).siblings('.btn-save-observacion').removeClass('d-none');
-            });
+                // Agregar eventos para los botones de edición
+                $('.btn-edit-observacion').click(function(ev) {
+                    ev.preventDefault();
+                    const id = $(this).data('id');
+                    const cell = $(`.observacion-cell[data-id="${id}"]`);
 
-            $('.btn-save-observacion').click(function(ev) {
-                ev.preventDefault();
-                const id = $(this).data('id');
-                console.log(id)
-                const cell = $(`.observacion-cell[data-id="${id}"]`);
-                const nuevaObservacion = cell.find('.observacion-edit').val();
-                
-                // Mostrar carga
+                    // Mostrar textarea y ocultar texto
+                    cell.find('.observacion-text').addClass('d-none');
+                    cell.find('.observacion-edit').removeClass('d-none');
+
+                    // Cambiar botones
+                    $(this).addClass('d-none');
+                    $(this).siblings('.btn-save-observacion').removeClass('d-none');
+                });
+
+                $('.btn-save-observacion').click(function(ev) {
+                    ev.preventDefault();
+                    const id = $(this).data('id');
+                    console.log(id)
+                    const cell = $(`.observacion-cell[data-id="${id}"]`);
+                    const nuevaObservacion = cell.find('.observacion-edit').val();
+
+                    // Mostrar carga
+                    Swal.fire({
+                        title: 'Guardando...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Enviar la actualización al servidor
+                    $.ajax({
+                        url: 'updateObservacion/',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            idresultado: id,
+                            observacion: nuevaObservacion,
+                            _token: $("input[name='_token']").val()
+                        },
+                        success: function(response) {
+                            // Actualizar la vista
+                            cell.find('.observacion-text').text(nuevaObservacion);
+
+                            // Volver al estado normal
+                            cell.find('.observacion-text').removeClass('d-none');
+                            cell.find('.observacion-edit').addClass('d-none');
+
+                            // Cambiar botones
+                            $(`.btn-edit-observacion[data-id="${id}"]`).removeClass(
+                                'd-none');
+                            $(`.btn-save-observacion[data-id="${id}"]`).addClass(
+                                'd-none');
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Guardado!',
+                                text: 'La observación se ha actualizado correctamente.',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function(jqXHR) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se pudo guardar la observación. ' +
+                                    jqXHR.responseText
+                            });
+                        }
+                    });
+                });
+
+                // Cerrar SweetAlert de carga
+                Swal.close();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
                 Swal.fire({
-                    title: 'Guardando...',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudieron cargar los defectos. ' + jqXHR.responseText
                 });
-
-                // Enviar la actualización al servidor
-                $.ajax({
-                    url: 'updateObservacion/',
-                    type: 'post',
-                    dataType: 'json',
-                    data: {
-                        idresultado: id,
-                        observacion: nuevaObservacion,
-                        _token: $("input[name='_token']").val()
-                    },
-                    success: function(response) {
-                        // Actualizar la vista
-                        cell.find('.observacion-text').text(nuevaObservacion);
-                        
-                        // Volver al estado normal
-                        cell.find('.observacion-text').removeClass('d-none');
-                        cell.find('.observacion-edit').addClass('d-none');
-                        
-                        // Cambiar botones
-                        $(`.btn-edit-observacion[data-id="${id}"]`).removeClass('d-none');
-                        $(`.btn-save-observacion[data-id="${id}"]`).addClass('d-none');
-                        
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Guardado!',
-                            text: 'La observación se ha actualizado correctamente.',
-                            timer: 1500,
-                            showConfirmButton: false
-                        });
-                    },
-                    error: function(jqXHR) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'No se pudo guardar la observación. ' + jqXHR.responseText
-                        });
-                    }
-                });
-            });
-
-            // Cerrar SweetAlert de carga
-            Swal.close();
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudieron cargar los defectos. ' + jqXHR.responseText
-            });
-        }
-    });
-}
+            }
+        });
+    }
 
     var saveLabrado = function(data) {
         let idresultados = data.getAttribute('idresultados')
-        console.log(data.id)
-        console.log(data.value)
+        if ($("#idprueba").val() < 1) {
+            document.getElementById(data.id).value = '';
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Por favor seleccione una prueba antes de continuar.'
+            });
+            return;
+        }
+
+        document.getElementById(data.id).disabled = true;
         $.ajax({
             url: 'saveLabrado/',
             type: 'post',
@@ -560,14 +581,18 @@
                     timer: 4000
                 });
 
-                Swal.fire({
-                    title: 'Refrescando la tabla',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
-                loadDefects();
+                // Swal.fire({
+                //     title: 'Refrescando la tabla',
+                //     allowOutsideClick: false,
+                //     didOpen: () => {
+                //         Swal.showLoading();
+                //     }
+                // });
+
+
+
+
+                // loadDefects();
 
 
             },
@@ -684,7 +709,9 @@
                 });
 
                 $("#tableResultsDefectos tbody tr").each(function() {
-                    var btn = $(this).find('button[onclick^="event.preventDefault(); removeDefect(' + idresultados + ')"]');
+                    var btn = $(this).find(
+                        'button[onclick^="event.preventDefault(); removeDefect(' +
+                        idresultados + ')"]');
                     if (btn.length > 0) {
                         $(this).remove();
                     }
