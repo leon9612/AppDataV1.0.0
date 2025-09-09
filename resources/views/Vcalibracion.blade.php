@@ -28,7 +28,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 col-md-5 col-lg-5" style="align-content: center">
+                                <div class="col-sm-12 col-md-4 col-lg-4" style="align-content: center">
                                     <div class="input-group mb-3" style="align-content: center">
                                         <label class="input-group-text" for="inputGroupSelect01">Maquinas</label>
                                         <select class="form-select" name="selMaquina" id="selMaquina">
@@ -40,6 +40,15 @@
                                             <span class="error text-danger">{{ $errors->first('selMaquina') }}</span>
                                         @endif
 
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-4 col-lg-4" style="align-content: center">
+                                    <div class="input-group mb-3" style="align-content: center">
+                                        <label class="input-group-text" for="inputGroupSelect01">Sistema gases</label>
+                                        <select class="form-select" name="tipo" id="tipo">
+                                            <option value="0">Android </option>
+                                            <option value="1">PC </option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-md-2 col-lg-2" style="align-content: center">
@@ -176,7 +185,7 @@
     $(document).ready(function() {
         // Guardar valores cuando cambian
         $('input[type="number"], select').on('change', function() {
-            
+
             if (this.name) {
                 localStorage.setItem(this.name, $(this).val());
             }
@@ -200,6 +209,7 @@
         let formData = {
             _token: $('input[name="_token"]').val(),
             usuario: $('#selUsuario option:selected').attr('value'),
+            tipo: $('#tipo option:selected').attr('value'),
             maquina: $('#selMaquina').val(),
             pef: $('#PEF').val(),
             span_bajo: {},

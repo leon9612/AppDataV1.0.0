@@ -42,7 +42,7 @@
                                             style="height: 58px" name="selPlaca">
                                             <option selected>Placas</option>
                                             @foreach ($placas as $placa)
-                                                <option value="{{ $placa->idprueba . '-' . $placa->placa }}">
+                                                <option value="{{ $placa->idprueba . '-' . $placa->placa . '-' . $placa->idhojapruebas }}">
                                                     {{ $placa->placa }} </option>
                                             @endforeach
                                         </select>
@@ -59,6 +59,7 @@
                                                 id="floatingInput" placeholder="name@example.com" disabled>
                                             <input type="hidden" name="idprueba" id="idprueba" class="form-control">
                                             <input type="hidden" name="placa" id="placa" class="form-control">
+                                            <input type="hidden" name="idhojapruebas" id="idhojapruebas" class="form-control">
                                             <label for="floatingInput">Placa seleccionada</label>
                                             @if ($errors->has('idprueba'))
                                                 <span class="error text-danger">{{ $errors->first('idprueba') }}</span>
@@ -88,7 +89,7 @@
                                 <div class="col-sm-12 col-md-4 col-lg-4" style="align-content: center">
                                     <div class="input-group mb-3" style="align-content: center">
                                         <label class="input-group-text" for="inputGroupSelect01">Usuarios</label>
-                                        <select class="form-select" id="inputGroupSelect01" name="selUsuario"
+                                        <select class="form-select"  name="selUsuario"
                                             id="selUsuario">
                                             @foreach ($usuarios as $us)
                                                 <option value="{{ $us->IdUsuario }}">{{ $us->nombre }} </option>
@@ -99,7 +100,7 @@
                                 <div class="col-sm-12 col-md-5 col-lg-5" style="align-content: center">
                                     <div class="input-group mb-3" style="align-content: center">
                                         <label class="input-group-text" for="inputGroupSelect01">Maquinas</label>
-                                        <select class="form-select" id="inputGroupSelect01" name="selMaquina"
+                                        <select class="form-select"  name="selMaquina"
                                             id="selMaquina">
                                             @foreach ($maquinas as $ma)
                                                 <option value="{{ $ma->idmaquina }}">{{ $ma->maquina }} </option>
@@ -198,13 +199,26 @@
                                                             <div class="col-md-3 col-sm-6 mb-2">
                                                                 <label style="font-size: 13px;">Repuesto</label>
                                                                 <div class="input-group input-group-sm">
-                                                                    @for ($toma = 1; $toma <= 3; $toma++)
-                                                                        <input type="number" step="0.01"
-                                                                            min="0" max="99"
-                                                                            name="labrado_repuesto_t{{ $toma }}"
-                                                                            class="form-control"
-                                                                            placeholder="Toma {{ $toma }}"
-                                                                            style="width: 33%; font-size: 12px;" />
+                                                                    @for ($toma = 0; $toma <= 2; $toma++)
+                                                                        @if ($toma == 0)
+                                                                            <input type="number" step="0.01"
+                                                                                min="0" max="99"
+                                                                                name="Labrado_repuesto"
+                                                                                id="Labrado_repuesto"
+                                                                                class="form-control"
+                                                                                placeholder="Toma {{ $toma }}"
+                                                                                style="width: 33%; font-size: 12px;"
+                                                                                onblur="saveLabrado(this)" />
+                                                                        @else
+                                                                            <input type="number" step="0.01"
+                                                                                min="0" max="99"
+                                                                                name="Labrado_repuesto_{{ $toma }}"
+                                                                                id="Labrado_repuesto_{{ $toma }}"
+                                                                                class="form-control"
+                                                                                placeholder="Toma {{ $toma }}"
+                                                                                style="width: 33%; font-size: 12px;"
+                                                                                onblur="saveLabrado(this)" />
+                                                                        @endif
                                                                     @endfor
                                                                 </div>
                                                             </div>
@@ -229,6 +243,42 @@
 
                                             </div>
                                         </div> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container" style=" margin-top: 2%;  ">
+                                    <div class="row">
+                                        <label
+                                            style="color: rgb(0, 4, 255); font-size: 18px; text-align: center; width: 100%; background-color: lightgoldenrodyellow">Comentarios
+                                            adicionales</label>
+                                        <div style="justify-content: left; display: flex; margin-top: 15px">
+
+                                            <br>
+
+                                            <div class="col-sm-12 col-md-12 col-lg-12" style="align-content: left">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" id="nuevoComentarioAdicional"
+                                                        class="form-control"
+                                                        placeholder="Agregar comentario adicional...">
+                                                    <button type="button" class="btn btn-outline-primary"
+                                                        onclick="saveComentarioAdicional()"
+                                                        id="btnAgregarComentarioAdicional">Agregar</button>
+                                                </div>
+
+
+
+                                                <table class="table" id="comentariosAdicionales">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Descripcion</th>
+                                                            <th>Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="bodyComentariosAdicionales">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -269,6 +319,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
 
                                 <div class="container" style=" margin-top: 2%;  ">
                                     <div class="row">
@@ -379,9 +431,12 @@
         e.preventDefault();
         var placa = $('.selPlaca option:selected').attr('value');
         var placa2 = placa.split("-");
+        // console.log(placa2)
         $(".Vplaca").val(placa2[1]);
         $("#placa").val(placa2[1]);
         $("#idprueba").val(placa2[0]);
+        $("#idhojapruebas").val(placa2[2]);
+        console
         Swal.fire({
             title: 'Cargando defectos...',
             allowOutsideClick: false,
@@ -413,8 +468,10 @@
                 _token: $("input[name='_token']").val()
             },
             success: function(data) {
+                let comentariosadicionales = 0;
                 initializeSelect2(data.defectos);
                 $("#tableResultsDefectos tbody").empty();
+                $("#comentariosAdicionales tbody").empty();
                 if (data.resultados.length == 0) {
                     $("#tableResultsDefectos tbody").append(
                         `<tr>
@@ -456,9 +513,36 @@
                         </tr>`
                         );
                     } else if (index.observacion == "OBSERVACIONLABRADO") {
+                        console.log(index.tiporesultado)
                         $("#" + index.tiporesultado)
                             .val(index.valor)
                             .attr('idresultados', index.idresultados);
+                    } else if (index.tiporesultado == "COMENTARIOSADICIONALES") {
+                        comentariosadicionales = 1;
+                        const observacionCell = `
+                        <td class="observacion-cell" data-id="${index.idresultados}">
+                            <span class="observacion-text">${index.valor}</span>
+                            <input class="form-control observacion-edit d-none" value="${index.valor}" />
+                        </td>`;
+                        $("#bodyComentariosAdicionales").append(
+                            `<tr>
+                                ${observacionCell}
+                                
+                                <td>
+                                <div class="d-flex flex-column gap-1">
+                                    <button class="btn btn-primary btn-sm btn-edit-observacion" data-id="${index.idresultados}">
+                                        <i class="fas fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-success btn-sm btn-save-observacion d-none" data-id="${index.idresultados}">
+                                        <i class="fas fa-save"></i> Guardar
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="event.preventDefault(); removeDefect(${index.idresultados});">
+                                        <i class="fas fa-trash"></i> Eliminar
+                                    </button>
+                                </div>
+                            </td>
+                            </tr>`
+                        );
                     }
                 });
 
@@ -499,6 +583,7 @@
                         type: 'post',
                         dataType: 'json',
                         data: {
+                            comentariosadicionales: comentariosadicionales,
                             idresultado: id,
                             observacion: nuevaObservacion,
                             _token: $("input[name='_token']").val()
@@ -567,6 +652,7 @@
             type: 'post',
             dataType: 'json',
             data: {
+                
                 idprueba: $("#idprueba").val(),
                 idresultados: idresultados,
                 tiporesultado: data.id,
@@ -606,13 +692,6 @@
         });
     }
 
-
-
-
-
-
-
-
     function initializeSelect2(defects) {
         const defectOptions = defects.map(defect => ({
             id: defect.codigo,
@@ -629,6 +708,7 @@
 
     function addDefectToTable(defect) {
         // Verificar si el defecto ya existe en la tabla
+        let rechazoFrenos = 0;
         const exists = $("#tableResultsDefectos tbody tr").toArray().some(tr => {
             return $(tr).find('td:first').text() === defect.codigo;
         });
@@ -642,11 +722,69 @@
             return;
         }
 
+        if(defect.codigo == '1.1.11.37.6' || defect.codigo == '1.1.11.37.7' || defect.codigo == '1.2.9.18.6' ){
+            Swal.fire({
+                title: 'Advertencia',
+                text: 'Al agregar este defecto se generará rechazo en la prueba de frenos. ¿Desea continuar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, continuar',
+                cancelButtonText: 'No, cancelar'
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    rechazoFrenos = 0;
+                    return;
+                }
+                rechazoFrenos = 1;
+                // Continuar con la ejecución AJAX después de la confirmación
+                $.ajax({
+                    url: 'saveDefectos/',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {
+                        idhojapruebas: $("#idhojapruebas").val(),
+                        selMaquina: $("#selMaquina").val(),
+                        selUsuario: $("#selUsuario").val(),
+                        idhojapruebas: $("#idhojapruebas").val(),
+                        rechazoFrenos: rechazoFrenos,
+                        idprueba: $("#idprueba").val(),
+                        defecto: defect.codigo,
+                        _token: $("input[name='_token']").val()
+                    },
+                    success: function(data) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Éxito',
+                            text: 'El defecto se creó con éxito, por favor espere unos segundos para que se actualice la tabla.',
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                        });
+                        loadDefects();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudieron crear los defectos. ' + jqXHR.responseText
+                        });
+                    }
+                });
+            });
+            return;
+        }
+        // console.log(rechazoFrenos);
+
         $.ajax({
             url: 'saveDefectos/',
             type: 'post',
             dataType: 'json',
             data: {
+                idhojapruebas: $("#idhojapruebas").val(),
+                selMaquina: $("#selMaquina").val(),
+                selUsuario: $("#selUsuario").val(),
+                idhojapruebas: $("#idhojapruebas").val(),
+                rechazoFrenos: rechazoFrenos,
                 idprueba: $("#idprueba").val(),
                 defecto: defect.codigo,
                 _token: $("input[name='_token']").val()
@@ -687,6 +825,40 @@
         //         </td>
         //     </tr>
         // `);
+    }
+
+    var saveComentarioAdicional = function() {
+        $.ajax({
+            url: 'saveObservacionAdicional/',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                idprueba: $("#idprueba").val(),
+                comentario: $("#nuevoComentarioAdicional").val(),
+                _token: $("input[name='_token']").val()
+            },
+            success: function(data) {
+                $("#nuevoComentarioAdicional").val('');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'El comentario adicional se creó con éxito, por favor espere unos segundos para que se actualice la tabla.',
+                    showConfirmButton: false,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                });
+                loadDefects();
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudieron crear los defectos. ' + jqXHR.responseText
+                });
+
+            }
+        });
     }
 
     var removeDefect = function(idresultados) {

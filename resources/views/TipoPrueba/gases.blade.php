@@ -90,8 +90,7 @@
                             <div class="col-sm-12 col-md-5 col-lg-5" style="align-content: center">
                                 <div class="input-group mb-3" style="align-content: center">
                                     <label class="input-group-text" for="inputGroupSelect01">Maquinas</label>
-                                    <select class="form-select" id="inputGroupSelect01" name="selMaquina"
-                                        id="selMaquina">
+                                    <select class="form-select" name="selMaquina" id="selMaquina">
                                         @foreach ($maquinas as $ma)
                                             <option value="{{ $ma->idmaquina }}">{{ $ma->maquina }} </option>
                                         @endforeach
@@ -116,6 +115,17 @@
 
                                 </div>
                             </div>
+                            <div class="col-sm-12 col-md-3 col-lg-3" style="align-content: center">
+                                <div class="input-group mb-3" style="align-content: center">
+                                    <label class="input-group-text" for="inputGroupSelect01">Motocarro</label>
+                                    <select class="form-select" name="selMotocarro" id="selMotocarro">
+                                        <option value="0" selected>NO</option>
+                                        <option value="1">SI</option>
+                                    </select>
+
+
+                                </div>
+                            </div>
                         </div>
                         <div class="container" style="justify-content: center; display: flex ">
                             <div class="row">
@@ -128,9 +138,8 @@
                                     <div class="col-sm-12 col-md-2 col-lg-2" style="align-content: center">
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" 
-                                                    name="hc_ralenti" id="hc_ralenti" placeholder="1"
-                                                    value="{{ old('hc_ralenti') }}">
+                                                <input type="text" class="form-control" name="hc_ralenti"
+                                                    id="hc_ralenti" placeholder="1" value="{{ old('hc_ralenti') }}">
                                                 <label for="floatingInput">HC RALENTI</label>
                                                 @if ($errors->has('hc_ralenti'))
                                                     <span
@@ -144,8 +153,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="co_ralenti" id="co_ralenti"
-                                                    placeholder="1" value="{{ old('co_ralenti') }}">
+                                                    name="co_ralenti" id="co_ralenti" placeholder="1"
+                                                    value="{{ old('co_ralenti') }}">
                                                 <label for="floatingInput">CO RALENTI</label>
                                                 @if ($errors->has('co_ralenti'))
                                                     <span
@@ -159,8 +168,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="co2_ralenti" id="co2_ralenti"
-                                                    placeholder="1" value="{{ old('co2_ralenti') }}">
+                                                    name="co2_ralenti" id="co2_ralenti" placeholder="1"
+                                                    value="{{ old('co2_ralenti') }}">
                                                 <label for="floatingInput">CO2 RALENTI</label>
                                                 @if ($errors->has('co2_ralenti'))
                                                     <span
@@ -174,8 +183,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="o2_ralenti" id="o2_ralenti"
-                                                    placeholder="1" value="{{ old('o2_ralenti') }}">
+                                                    name="o2_ralenti" id="o2_ralenti" placeholder="1"
+                                                    value="{{ old('o2_ralenti') }}">
                                                 <label for="floatingInput">O2 RALENTI</label>
                                                 @if ($errors->has('o2_ralenti'))
                                                     <span
@@ -189,8 +198,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="rpm_ralenti" id="rpm_ralenti"
-                                                    placeholder="1" value="{{ old('rpm_ralenti') }}">
+                                                    name="rpm_ralenti" id="rpm_ralenti" placeholder="1"
+                                                    value="{{ old('rpm_ralenti') }}">
                                                 <label for="floatingInput">RPM RALENTI</label>
                                                 @if ($errors->has('rpm_ralenti'))
                                                     <span
@@ -216,9 +225,8 @@
                                     <div class="col-sm-12 col-md-2 col-lg-2" style="align-content: center">
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
-                                                <input type="text" class="form-control" 
-                                                    name="hc_crucero" id="hc_crucero" placeholder="1"
-                                                    value="{{ old('hc_crucero') }}">
+                                                <input type="text" class="form-control" name="hc_crucero"
+                                                    id="hc_crucero" placeholder="1" value="{{ old('hc_crucero') }}">
                                                 <label for="floatingInput">HC CRUCERO</label>
                                                 @if ($errors->has('hc_crucero'))
                                                     <span
@@ -232,8 +240,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="co_crucero" id="co_crucero"
-                                                    placeholder="1" value="{{ old('co_crucero') }}">
+                                                    name="co_crucero" id="co_crucero" placeholder="1"
+                                                    value="{{ old('co_crucero') }}">
                                                 <label for="floatingInput">CO CRUCERO</label>
                                                 @if ($errors->has('co_crucero'))
                                                     <span
@@ -247,8 +255,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="co2_crucero" id="co2_crucero"
-                                                    placeholder="1" value="{{ old('co2_crucero') }}">
+                                                    name="co2_crucero" id="co2_crucero" placeholder="1"
+                                                    value="{{ old('co2_crucero') }}">
                                                 <label for="floatingInput">CO2 CRUCERO</label>
                                                 @if ($errors->has('co2_crucero'))
                                                     <span
@@ -262,8 +270,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="o2_crucero" id="o2_crucero"
-                                                    placeholder="1" value="{{ old('o2_crucero') }}">
+                                                    name="o2_crucero" id="o2_crucero" placeholder="1"
+                                                    value="{{ old('o2_crucero') }}">
                                                 <label for="floatingInput">O2 CRUCERO</label>
                                                 @if ($errors->has('o2_crucero'))
                                                     <span
@@ -277,8 +285,8 @@
                                         <div class="input-group mb-3" style="align-content: center">
                                             <div class="form-floating mb-3">
                                                 <input type="number" class="form-control" step="0.01"
-                                                     name="rpm_crucero" id="rpm_crucero"
-                                                    placeholder="1" value="{{ old('rpm_crucero') }}">
+                                                    name="rpm_crucero" id="rpm_crucero" placeholder="1"
+                                                    value="{{ old('rpm_crucero') }}">
                                                 <label for="floatingInput">RPM CRUCERO</label>
                                                 @if ($errors->has('rpm_crucero'))
                                                     <span
@@ -294,12 +302,24 @@
                             </div>
                         </div>
 
-
-                        <div style="text-align: center">
-
-                            <button style="height: 55px; width: 150px" class="btn btn-outline-success"
-                                type="submit">Guardar</button>
-
+                        <div class="row justify-content-center align-items-center" style="margin-top: 20px; margin-bottom: 20px">
+                            <div class="col-sm-12 col-md-2 col-lg-2">
+                                <div class="input-group mb-3">
+                                    <div class="form-floating mb-3" style="margin-top: 29px">
+                                        <input type="number" class="form-control" step="0.01"
+                                            name="tempMotor" id="tempMotor" placeholder="1"
+                                            value="{{ $tempMotor }}" >
+                                        <label for="floatingInput">TEMPERATURA MOTOR</label>
+                                        @if ($errors->has('tempMotor'))
+                                            <span class="error text-danger">{{ $errors->first('tempMotor') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 d-flex align-items-end">
+                                <button style="height: 55px; width: 150px" class="btn btn-outline-success"
+                                    type="submit">Guardar</button>
+                            </div>
                         </div>
 
 
@@ -330,6 +350,12 @@
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
+    $(document).ready(function() {
+        if (localStorage.getItem('motocarro') == '1') {
+            $('#selMotocarro').val(localStorage.getItem('motocarro'));
+            getMaquina();
+        }
+    });
     $(".selPlaca").change(function(e) {
         e.preventDefault();
         var placa = $('.selPlaca option:selected').attr('value');
@@ -337,6 +363,14 @@
         $(".Vplaca").val(placa2[1]);
         $("#placa").val(placa2[1]);
         $("#idprueba").val(placa2[0]);
+
+    });
+    $("#selMotocarro").change(function(e) {
+        e.preventDefault();
+        let motocarro = $('#selMotocarro option:selected').attr('value');
+        localStorage.setItem('motocarro', motocarro);
+
+        getMaquina();
 
     });
 
@@ -443,4 +477,44 @@
             });
         }
     })
+
+    var getMaquina = function() {
+        $.ajax({
+            url: 'getMaquina/',
+            type: 'post',
+            dataType: 'json',
+            data: {
+                desdemixta: 1,
+                idtipo_prueba: 3,
+                motocarro: $('#selMotocarro').val(),
+                _token: $("input[name='_token']").val()
+            },
+            success: function(data, textStatus, jqXHR) {
+                console.log(data)
+                if (data.length > 0) {
+                    $('#selMaquina').empty();
+                    // $('.selMaquina').append('<option value="">Seleccione una maquina</option>');
+                    $.each(data, function(i, res) {
+                        $('#selMaquina').append('<option value="' + res.idmaquina + '">' + res
+                            .maquina +
+                            '</option>');
+                    });
+                } else {
+                    Toast.fire({
+                        icon: "error",
+                        title: "No se encontraron maquinas."
+                    });
+                }
+
+
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('error')
+                console.log(jqXHR.responseText)
+                console.log(textStatus)
+                console.log(errorThrown)
+            }
+        });
+    }
 </script>

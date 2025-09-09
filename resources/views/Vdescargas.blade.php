@@ -149,8 +149,20 @@
                 _token: $("input[name='_token']").val()
             },
             success: function(data, textStatus, jqXHR) {
-                console.log(data)
+                // console.log(data)
                 downloadingAlert.close();
+                if (data.success) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Descarga exitosa'
+                    });
+                    // window.location.href = ;
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Error al descargar la actualización'
+                    });
+                }
 
             },
             error: function(jqXHR, textStatus, errorThrown) {

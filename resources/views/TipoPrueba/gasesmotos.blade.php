@@ -95,8 +95,7 @@
                             <div class="col-sm-12 col-md-5 col-lg-5" style="align-content: center">
                                 <div class="input-group mb-3" style="align-content: center">
                                     <label class="input-group-text" for="inputGroupSelect01">Maquinas</label>
-                                    <select class="form-select" id="selMaquina" name="selMaquina"
-                                        id="selMaquina">
+                                    <select class="form-select" id="selMaquina" name="selMaquina" id="selMaquina">
                                         @foreach ($maquinas as $ma)
                                             <option value="{{ $ma->idmaquina }}">{{ $ma->maquina }} </option>
                                         @endforeach
@@ -238,11 +237,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="text-align: center">
-
-                            <button style="height: 55px; width: 150px" class="btn btn-outline-success"
-                                type="submit">Guardar</button>
-
+                        <div class="row justify-content-center align-items-center"
+                            style="margin-top: 20px; margin-bottom: 20px">
+                            <div class="col-sm-12 col-md-2 col-lg-2">
+                                <div class="input-group mb-3">
+                                    <div class="form-floating mb-3" style="margin-top: 29px">
+                                        <input type="number" class="form-control" step="0.01" name="tempMotor"
+                                            id="tempMotor" placeholder="1" value="{{ $tempMotor }}">
+                                        <label for="floatingInput">TEMPERATURA MOTOR</label>
+                                        @if ($errors->has('tempMotor'))
+                                            <span class="error text-danger">{{ $errors->first('tempMotor') }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 d-flex align-items-end">
+                                <button style="height: 55px; width: 150px" class="btn btn-outline-success"
+                                    type="submit">Guardar</button>
+                            </div>
                         </div>
 
 
@@ -273,13 +285,13 @@
             getMaquina();
         }
     });
-     $("#selMotocarro").change(function(e) {
+    $("#selMotocarro").change(function(e) {
         e.preventDefault();
         let motocarro = $('#selMotocarro option:selected').attr('value');
         localStorage.setItem('motocarro', motocarro);
-        
-            getMaquina();
-        
+
+        getMaquina();
+
     });
 
     $(".selPlaca").change(function(e) {
@@ -293,7 +305,7 @@
 
     });
 
-   
+
     $("#btn-evento").click(function(ev) {
         ev.preventDefault();
         if ($(".Vplaca").val() == null || $(".Vplaca").val() == "") {
@@ -405,7 +417,8 @@
                     $('#selMaquina').empty();
                     // $('.selMaquina').append('<option value="">Seleccione una maquina</option>');
                     $.each(data, function(i, res) {
-                        $('#selMaquina').append('<option value="' + res.idmaquina + '">' + res.maquina +
+                        $('#selMaquina').append('<option value="' + res.idmaquina + '">' + res
+                            .maquina +
                             '</option>');
                     });
                 } else {
