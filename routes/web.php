@@ -63,6 +63,7 @@ Route::get('/getmac', [Clogin::class, 'getMac']);
 Route::get('/getSession', [Clogin::class, 'getSession']);
 Route::post('/getDefectos', [Cvisual::class, 'getDefectos']);
 Route::post('/updateObservacion', [Cvisual::class, 'updateObservacion']);
+Route::post('/saveObservacionAdicional', [Cvisual::class, 'saveObservacionAdicional']);
 Route::post('/deleteDefectos', [Cvisual::class, 'deleteDefectos']);
 Route::post('/saveDefectos', [Cvisual::class, 'saveDefectos']);
 Route::post('/saveLabrado', [Cvisual::class, 'saveLabrado']);
