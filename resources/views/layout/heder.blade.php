@@ -335,6 +335,7 @@
                             <i class="bi bi-box-arrow-left"></i> <span>Cerrar sesión</span>
                         </a>
                     </li>
+                    <br><br><br><br><br><br>
                 </ul>
             </nav>
         </div>
