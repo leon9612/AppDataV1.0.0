@@ -94,7 +94,7 @@
                                             <i class="bi bi-envelope-fill"></i> ingenierodesoftware0507@gmail.com
                                         </a>
                                         <a href="https://wa.me/573232517006" class="list-group-item list-group-item-action">
-                                            <i class="bi bi-whatsapp"></i> +57 323 2517006 (WhatsApp/Telegram)
+                                            <i class="bi bi-whatsapp"></i> +57 322 9065874 (WhatsApp/Telegram)
                                         </a>
                                     </div>
                                 </div>
@@ -132,4 +132,5 @@
     .alert {
         border-left: 5px solid;
     }
+
 </style>
