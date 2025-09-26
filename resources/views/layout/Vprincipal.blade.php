@@ -60,7 +60,7 @@
                                     <h5 class="card-title mb-0">Soporte Técnico</h5>
                                 </div>
                                 <div class="card-body">
-                                    <p><i class="bi bi-headset"></i> Asistencia 24/7 para resolución de fallas o ajustes requeridos</p>
+                                    <p><i class="bi bi-headset"></i> Asistencia continua para resolución de fallas o ajustes requeridos</p>
                                     
                                     <div class="mt-4">
                                         <h6><i class="bi bi-gear-fill"></i> Requisitos de Instalación</h6>
@@ -132,5 +132,4 @@
     .alert {
         border-left: 5px solid;
     }
-
 </style>
